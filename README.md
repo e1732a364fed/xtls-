@@ -19,6 +19,7 @@ https://github.com/RPRX/v2ray-vless/releases/tag/xtls
 如果使用xtls 浏览https网页的话就不一样了，因为此时 xtls 内部传输的不是一般数据，而是另一层 tls；那么xtls显然就是为解决这个问题而诞生的。
 
 
+## 源码分析
 
  我对比一下吧，xtls的源码在 github.com/xtls/go
  
@@ -30,7 +31,7 @@ https://github.com/RPRX/v2ray-vless/releases/tag/xtls
 
 把它下载下来，用 diff命令比较一下与go官方文件的异同
 
-1. xtls把 conn改成了 Connection，这里目前的疑惑是，外界有需要这个conn的地方吗？
+1. xtls把 conn改成了 Connection，外界有需要这个conn的地方吗？确实用到了，在 https://github.com/XTLS/Xray-core/blob/7dcf08c5ef21b7e48dc8753af171cde5c99d1bd9/proxy/vless/inbound/inbound.go#L459
 2. 多了下述字段
 
 ```go
