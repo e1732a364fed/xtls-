@@ -165,6 +165,8 @@ https://github.com/XTLS/Go/issues/16
 2. xtls-rprx-direct
 3. xtls-rprx-splice
 
+### 关于 xtls/go的 issue 12
+
 据说上面的 23 3 3 判断是用在origin上的？？
 
 然而，根据上文的探索，请大家在 conn.go 文件中搜索 `if c.DirectMode {`，就会发现direct模式是在 23 3 3 判断之后发生的。
@@ -173,6 +175,7 @@ https://github.com/XTLS/Go/issues/16
 
 splice就不用说了，和服务端没关系，属于客户端实现，实际上splice在 conn.go里没有体现出来，因此 splice是与 origin, direct 无关的一种流控；（按我的思路，它算不上流控，我认为只有在conn.go 里体现到的才叫流控）
 
+具体说，就是说 issue12认为origin模式下才有问题；而实际上根据 23 3 3的判断，我认为任何情况下都是可能被攻击的，这个我实在是小白，搞不懂，总之这就是我目前的理解。我不管rprx咋回复的，反正代码里就是如此。
 
 ## xray 的 legacy
 
