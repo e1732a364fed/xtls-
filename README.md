@@ -59,7 +59,7 @@ maybe bool
 
 已经知道的是，这个 SHOW 只是用于打印错误或者debug信息，MARK只是针对该连接的作者可以自定义的一个标志，RPRX代表使用xtls与否。
 
-根据后面的分析，DirectIn 和 DirectOut 是 “判断完成、该连接使用xtls” 的标志，在 Read 和 Write方法里会用到。
+根据后面的分析，DirectIn 和 DirectOut 是 “判断完成，且该连接使用xtls 的 direct 流控” 的标志，在 Read 和 Write方法里会用到。
 
 3. 在 readRecordOrCCS 中发生了较大改变，具体是 `// Process message.`注释的下面
 具体来说，他把 原先的下述代码
