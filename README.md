@@ -166,7 +166,11 @@ xtls-rprx-splice
 
 实际上我不太清楚；据说上面的 23 3 3 判断是用在origin上的？？
 
-本文下一个目标就是搞清楚这些流控 和具体代码的联系。搞清楚原理。
+然而，根据上文的探索，请大家在 conn.go 文件中搜索 `if c.DirectMode {`，就会发现direct模式是在 23 3 3 判断知乎发生的。
+
+也就是说， 无论是 origin 还是 direct， 都是依赖于 最基础的 客户数据分析。
+
+splice就不用说了，和服务端没关系，属于客户端实现，实际上splice在 conn.go里没有体现出来，因此 splice是与 origin, direct 无关的一种流控；（按我的思路，它算不上流控，我认为只有在conn.go 里体现到的才叫流控）
 
 
 ## xray 的 legacy
