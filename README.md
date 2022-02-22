@@ -175,6 +175,23 @@ https://github.com/XTLS/Go/issues/16
 
 如果1MB的数据就不得了哦，循环一百万次
 
+不过这个是在Write里的循环，也就是说，要想办法给 xtls服务器的 Write函数提供这么一段独特的数据；
+
+因为xtls用于代理，所以xray 会读取 https服务器的真实数据，然后 用 Write函数 发送到客户端。 那么我们只要保证 https服务器的 加密https流量的数据实际上是伪造的就可以了，这个也不难。
+
+#### 攻击情形举例
+
+比如如果一个机场用了vless+xtls，然后我买了这个机场，我知道了vless的密码；然后我感觉这个机场不好用，我就决定攻击它的vless服务器；
+
+我架设一个独特的https网站，对任何来的连接都进行真实tls握手，但是发送的 record 数据是经过伪造的 23 3 3 0 0 23 3 3 0 0 循环 的数据
+
+然后我给这个独特的https网站加一个域名，比如 fake.https.com
+
+然后我打开使用 该机场vless订阅 的 xray客户端，然后打开浏览器，输入 fake.https.com
+
+这样机场的 xtls服务器就会收到 连接 fake.https.com 的指令，然后 我们的 fake.https.com 握手成功后，就会向 xtls发送特殊数据，然后就会触发 xtls服务器的超长循环，达到攻击目的。
+
+
 ## 关于 xray的流控
 
 大概分下面三种
