@@ -167,3 +167,7 @@ https://github.com/v2fly/v2ray-core/commits/3ef7feaeaf737d05c5a624c580633b7ce0f0
 
 关于splice
 https://v2xtls.org/xray%e5%8f%91%e5%b8%831-1-2%e7%89%88%e6%9c%ac/
+
+# 话外
+
+总之，关于 23 3 3的判断，我只想说，23333
