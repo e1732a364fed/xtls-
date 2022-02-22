@@ -160,13 +160,14 @@ https://github.com/XTLS/Go/issues/16
 ## 关于 xray的流控
 
 大概分下面三种
-xtls-rprx-origin
-xtls-rprx-direct
-xtls-rprx-splice
 
-实际上我不太清楚；据说上面的 23 3 3 判断是用在origin上的？？
+1. xtls-rprx-origin
+2. xtls-rprx-direct
+3. xtls-rprx-splice
 
-然而，根据上文的探索，请大家在 conn.go 文件中搜索 `if c.DirectMode {`，就会发现direct模式是在 23 3 3 判断知乎发生的。
+据说上面的 23 3 3 判断是用在origin上的？？
+
+然而，根据上文的探索，请大家在 conn.go 文件中搜索 `if c.DirectMode {`，就会发现direct模式是在 23 3 3 判断之后发生的。
 
 也就是说， 无论是 origin 还是 direct， 都是依赖于 最基础的 客户数据分析。
 
