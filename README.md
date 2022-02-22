@@ -219,7 +219,11 @@ https://github.com/v2fly/v2ray-core/commits/3ef7feaeaf737d05c5a624c580633b7ce0f0
 后面我仔细查看了，是 rprx把自己的readv代码 提交了一个 pull request, 然后merge到了 v2fly的代码里
 https://github.com/v2fly/v2ray-core/pull/388
 
-问题是，截至目前，v2fly的 v2ray的代码 似乎仍然只有 xtls的部分会使用 readv？
+但是因为 v2fly 不使用 xtls，所以没用到。见 proxy/vless/inbound/inbound.go 文件的   `(h *Handler) Process` 函数的 两个库的对比
+
+https://github.com/RPRX/v2ray-vless/blob/master/proxy/vless/inbound/inbound.go#L448
+
+https://github.com/v2fly/v2ray-core/blob/master/proxy/vless/inbound/inbound.go
 
 ### splice
 
