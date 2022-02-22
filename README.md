@@ -211,11 +211,22 @@ https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/
 
 不过它真的毫无价值了吗？应该也不是，因为除了这个以外，rprx还是实现了 ReadV 增强， splice等。那些功能还是有价值的。
 
+### ReadV
+
 不过 v2ray里也是有 readv的，所以也不清楚xray的那个readv和这个是什么关系
 https://github.com/v2fly/v2ray-core/commits/3ef7feaeaf737d05c5a624c580633b7ce0f0f1be/common/buf/readv_reader.go
 
+后面我仔细查看了，是 rprx把自己的readv代码 提交了一个 pull request, 然后merge到了 v2fly的代码里
+https://github.com/v2fly/v2ray-core/pull/388
+
+问题是，截至目前，v2fly的 v2ray的代码 似乎仍然只有 xtls的部分会使用 readv？
+
+### splice
+
 关于splice
 https://v2xtls.org/xray%e5%8f%91%e5%b8%831-1-2%e7%89%88%e6%9c%ac/
+
+
 
 # 话外
 
