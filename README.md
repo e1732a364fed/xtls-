@@ -157,6 +157,17 @@ https://github.com/XTLS/Go/issues/16
 
 与xtls的issue16相关的 xray的 中文讨论issue https://github.com/XTLS/Xray-core/issues/814
 
+## 关于 xray的流控
+
+大概分下面三种
+xtls-rprx-origin
+xtls-rprx-direct
+xtls-rprx-splice
+
+实际上我不太清楚；据说上面的 23 3 3 判断是用在origin上的？？
+
+本文下一个目标就是搞清楚这些流控 和具体代码的联系。搞清楚原理。
+
 
 ## xray 的 legacy
 
