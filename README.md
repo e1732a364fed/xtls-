@@ -157,6 +157,14 @@ https://github.com/XTLS/Go/issues/16
 
 与xtls的issue16相关的 xray的 中文讨论issue https://github.com/XTLS/Xray-core/issues/814
 
+### 无限循环攻击？
+
+关注conn.go代码 1107行 至 1144行
+
+这里是for循环，只要 c.skip == 0, 就会无线循环下去
+
+如果数据是 23 3 3 0 0 呢，是不是就触发了无限循环？
+
 ## 关于 xray的流控
 
 大概分下面三种
