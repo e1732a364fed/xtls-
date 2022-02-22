@@ -183,8 +183,11 @@ rprx说：
 
 但是有这样的实现吗？xray不还是在使用 xtls/go 包吗？ 只要使用这个过时的包，那么direct就时时会遭受 tls v1.3 过滤所带来的问题。
 
-关于direct模式和 origin模式都是用 xtls/go 的证据
+direct模式和 origin模式都是用 xtls/go 的证据
 https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/proxy/vless/inbound/inbound.go#L445
+
+xray使用 的 xtls/go 包的证据
+https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/go.mod#L19
 
 ## xray 的 legacy
 
