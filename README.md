@@ -144,7 +144,7 @@ c.skip < 0 的话，无论c.first判断如何，判断后都会continue循环；
 
 5. Write 方法 的首行，添加了 `if c.DirectOut {` 代码段
 
-具体而言，他经过一些判断后，舍弃了 后 31 字节的数据，只write前面的数据
+具体而言，他经过一些判断后，舍弃了 后 31 字节的数据，只write前面的数据; 根据资料，这里判断的是 close_notify 信息。
 
 6. Read 方法首行，添加了 `if c.DirectIn` 和 `if c.DirectPre` 的代码段
 
@@ -221,14 +221,16 @@ https://github.com/RPRX/v2ray-vless/releases/tag/preview2.3
 tls伪造攻击的探测（21年1月）：
 https://github.com/XTLS/Go/issues/12
 
-可以被检测（21年9月）：
+利用 close_notify 导致 xtls 可以被检测（21年9月）：
 https://github.com/XTLS/Go/issues/16
 
 >This makes the detection of XTLS unambiguously accurate
 
 与xtls的issue16相关的 xray的 中文讨论issue https://github.com/XTLS/Xray-core/issues/814
 
+这个 issue16我简单想了想，确实，GFW完全可以用它来精准探测 xtls，至少可以探测xtls目前的代码。
 
+不得不说 AkinoKaede 一定也对xtls代码进行深入的分析。
 
 
 ### 无限循环攻击？
@@ -323,6 +325,10 @@ https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/
 
 xray使用 的 xtls/go 包的证据
 https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/go.mod#L19
+
+## xray的总结
+
+可以被精准探测，可以被无限循环攻击，这两条还不够？别用xray了，漏洞百出，rprx不过如此。
 
 ## xray 的 legacy
 
