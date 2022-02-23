@@ -188,13 +188,22 @@ tls1.2和 1.3的 后面 两个数都是 3,3；而tls1.0的 后面两个数是 3�
 
 c.RPRX 开关只在 writeRecordLocked 里真正使用到（一共用到7处，其他六处都是尝试判断并设它为false)。如果 c.RPRX 开关处于关闭状态，则 writeRecordLocked 直接进入normal标签，行为与标准包一样。
 
-总之，目前的 xtls的代码是，只有在 外部和内部都使用 tls1.3 时，才进行 direct模式，这就是我的理解。
+总之，目前的 xtls的代码是，只有当 xtls 自己使用 tls1.3，且 内部传输数据也使用 tls1.2或 tls 1.3时，才 开启xtls的免二次加密功能，这就是我的理解。
+
+rprx在这里也自己说了，和我的推理吻合
+https://github.com/RPRX/v2ray-vless/releases/tag/xtls2
+
+>XTLS 本身需要是 TLSv1.3，内层 TLS 可以为 1.3 或 1.2，此时特殊功能才会生效。
+
+
 
 查看xtls的历史版本，最初的版本是 771, 即只有在 xtls使用 tls1.2时，才会 继续判断。（20年9月11），后面到了 20年9月15，有一个 叫“Evolution”的 commit，更新到 xtls使用 tls1.3时才判断。
 
 所谓的 DirectMode，应该是指，如果没有 DirectMode的话，每一个数据包都需要经过一堆判断，确认是不是 tls流量；而有了DirectMode之后，只需判断第一个数据包(这与 c.first又不同）。
 
 关于 c.first, 实际上是，因为 tls会分裂 一整段大数据为多个小数据，所以每次执行Read或Write时，都要判断一下 c.first，即数据包的第一个小片段。
+
+
 
 ## 关于xray的安全问题
 
