@@ -94,6 +94,9 @@ if !c.fall || typ != 23 || n == 19 {
 
 值得注意的是，c.fall,  c.total 和 c.ic 只在这一段代码里使用。
 
+这个条件的话，根据后面的 writeRecordLocked 部分分析，也是去判断数据包是否符合 tls v1.3, c.ic 应该是去累加十个包，然后把长度算在一起看符不符合头部标明的长度
+
+
 同时，如果c.fall后，typ == 23 (即此时认为这是正常数据），则会 c.in.incSeq()， 表示收到了这个record，（即未经过decrypt直接接受了这个record）。
 
 4. writeRecordLocked 方法 发生了较大改变, 插入了近140行代码
@@ -163,16 +166,30 @@ https://datatracker.ietf.org/doc/html/rfc5246
 
 也就是说，23 代表 application_data， 这个 tls1.2 和 1.3都是一样的
 
-根据
-https://halfrost.com/tls_1-3_record_protocol/
+根据rfc（注意这几个标准后两位都是46）
+
+tls1.3标准
+https://datatracker.ietf.org/doc/html/rfc8446 
 
 tls1.2标准
 https://datatracker.ietf.org/doc/html/rfc5246
 
+tls1.1标准
+https://datatracker.ietf.org/doc/html/rfc4346
+
 tls1.0标准：
 https://datatracker.ietf.org/doc/html/rfc2246
 
-tls1.2和 1.3的 后面 两个数都是 3,3；而tls1.0的 后面两个数是 3，1； 也就是说，23 3 3 的判断是针对 tls1.2或者tls1.3的；
+tls1.2和 1.3的 后面 两个数都是 3,3；而tls1.0的 后面两个数是 3，1；tls1.1 后面两个数是 3，2；
+
+也就是说，23 3 3 的判断是针对 tls1.2或者tls1.3的；
+
+那么不难猜出，`if (int(data[3])<<8 | int(data[4])) <= 16640 {` 的代码很可能就是明确判断 tls1.3的部分。（不过显然我们可以构造出伪装数据符合这一格式，比如3和4 都为0就满足）
+
+结合代码，那么就可以看到，只有当 xtls 自己使用 tls1.3，且 内部传输数据也使用 tls 1.3时，c.RPRX开关才会保持打开
+
+c.RPRX 开关只在 writeRecordLocked 里真正使用到（一共用到7处，其他六处都是尝试判断并设它为false)。如果 c.RPRX 开关处于关闭状态，则 writeRecordLocked 直接进入normal标签，行为与标准包一样。
+
 
 
 
