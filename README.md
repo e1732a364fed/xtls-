@@ -208,7 +208,9 @@ https://github.com/RPRX/v2ray-vless/releases/tag/preview2.3
 
 >与 Origin 不同，Direct 模式并不持续监测后续的数据流，也不会进行任何干涉。该模式的推荐程度与 TLSv1.3 的普及程度成正相关。
 
-关于 c.first, 实际上是，因为 tls会分裂 一整段大数据为多个小数据，所以每次执行Read或Write时，都要判断一下 c.first，即数据包的第一个小片段。
+>XTLS 的特殊功能开启时，若 10 次内未检测到 TLS data record，将自动关闭特殊功能。
+
+关于 c.first, 实际上是，因为 tls会分裂 一整段大数据为多个小数据，所以每次执行Read或Write时，都要判断一下 c.first，即数据包的第一个小片段。这个就是那个“10次” 的来历。
 
 
 
@@ -216,7 +218,7 @@ https://github.com/RPRX/v2ray-vless/releases/tag/preview2.3
 
 经理了上面分析后，xray的安全问题大概就清楚了。对比源码，再查看下面两个issue，就发现安全问题事实存在。
 
-tls伪造攻击（21年1月）：
+tls伪造攻击的探测（21年1月）：
 https://github.com/XTLS/Go/issues/12
 
 可以被检测（21年9月）：
