@@ -230,7 +230,7 @@ https://github.com/XTLS/Go/issues/16
 
 这个 issue16我简单想了想，确实，GFW完全可以用它来精准探测 xtls，至少可以探测xtls目前的代码。
 
-不得不说 AkinoKaede 一定也对xtls代码进行深入的分析。
+不得不说 AkinoKaede 一定也对xtls代码进行过深入的分析。
 
 
 ### 无限循环攻击？
@@ -282,6 +282,8 @@ https://github.com/XTLS/Go/issues/16
 
 这样的话，可以在每一条博文里都加一个这种img标签，这样你只要访问任意一个文章，都会爆。
 
+甚至，可以把种img放到 github的README.md 里（使用markdown语法），所以从今以后，任何对不了解的github仓库的访问对于xtls的使用者来说都是不安全的了，嘿嘿。
+
 #### 小白们的误区
 
 有人评论说只要两端都开启tls1.3就可以防止问题？ 请问你怎么想的？甚至 23 3 3 攻击就是在攻击 tlsv1.3特征，能不能读题。
@@ -326,13 +328,13 @@ https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/
 xray使用 的 xtls/go 包的证据
 https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/go.mod#L19
 
-## xray的总结
+## xray的败笔总结
 
 可以被精准探测，可以被无限循环攻击，这两条还不够？别用xray了，漏洞百出，rprx不过如此。
 
 ## xray 的 legacy
 
-不过它真的毫无价值了吗？应该也不是，因为除了这个以外，rprx还是实现了 ReadV 增强， splice等。那些功能还是有价值的。
+不过它真的毫无价值了吗？应该也不是，因为除了这个以外，rprx还是实现了 ReadV 增强， splice，utls包 等应用。那些功能还是有价值的。
 
 ### ReadV
 
