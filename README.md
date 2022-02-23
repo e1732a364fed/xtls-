@@ -88,11 +88,13 @@ if !c.fall || typ != 23 || n == 19 {
 
 >19 是 TLSv1.3 alert 消息的常见密文长度，这里认为它可能是TLSv1.3 的 alert
 
-后面代码 有判断 `c.vers == 772`,772就是指 tls v1.3 ，这里显然说明只有 tls v1.3 才会使用 xtls; 他不使用VersionTLS13 常量是个败笔。
+后面代码 有判断 `c.vers == 772`,772就是指 tls v1.3 ; 他不使用VersionTLS13 常量是个败笔。
 
 后面判断 23 3 3 后 会设置 c.total 和 c.ic; 后面会根据 c.total 以及某条件，设置 c.fall = true，然后打开 c.DirectPre 开关。
 
 值得注意的是，c.fall,  c.total 和 c.ic 只在这一段代码里使用。
+
+同时，如果c.fall后，typ == 23 (即此时认为这是正常数据），则会 c.in.incSeq()， 表示收到了这个record，（即未经过decrypt直接接受了这个record）。
 
 4. writeRecordLocked 方法 发生了较大改变, 插入了近140行代码
 
@@ -117,7 +119,14 @@ https://halfrost.com/https_record_layer/
 
 > **TLS 1.3 中的 additional_data 中的 2 个参与计算的字段值是固定死的(opaque_type = 23、legacy_record_version = 0x0303)**。
 
-看来还是判断tls 1.3
+这个还可以参考 RFC标准： https://datatracker.ietf.org/doc/html/rfc8446  
+
+总之还是判断tls 1.3
+
+仔细分析，首先 默认 c.RPRX 标志是打开的，true，然后，在 `if !c.taken && !c.first && typ == 23 && l >= 5 {` 时，如果 xtls协议使用的是 tls1.3协议，则继续判断，否则则直接将 c.RPRX 标志关闭。继续判断的部分，可以理解为，如果 内部包里，有连续十个都不满足 一定条件，则会	 关闭 c.RPRX 开关。若10个以内有一个满足条件，则设 c.taken 为true。
+
+也就是说，如果xtls协议使用的是 tls1.1, 和 tls1.2，就少了一步额外检查；如果 xtls协议使用的是 tls1.3，则要检查至多十遍内部包的数据头。
+
 
 c.taken 后，它会遍历数据的每一个字节；c.index 和 c.skip 初始值都为0，首先找值为23的字节，找到的话，index变为1，之后找3，index变为2，继续找3，index变为3，之后找<=66的值，index变为4，之后计算 c.skip的值，值为19的话，设 c.maybe = true
 
@@ -127,7 +136,7 @@ c.skip < 0 的话，无论c.first判断如何，判断后都会continue循环；
 
 在 c.first时，i的值会传给f，然后 还要调用一次 `c.writeRecordLocked(23, data[:f])`,  然后 关闭c.first,  打开  DirectOut开关
 
-如果 c.skip >=0 ，若 c.first 则会 在  c.skip 为0 时，关闭c.first,  打开  DirectOut开关，然后 goto normal， 否则会结束整个循环, 
+如果 c.skip >=0 ，若 c.first 则会 在  c.skip 为0 时，关闭c.first,  打开  DirectOut 开关，然后 goto normal， 否则会结束整个循环, 
 
 
 5. Write 方法 的首行，添加了 `if c.DirectOut {` 代码段
@@ -140,6 +149,30 @@ c.skip < 0 的话，无论c.first判断如何，判断后都会continue循环；
 
 8. Close 方法的 首行，添加了 `if c.DirectOut` 代码段；在DirectOut时，不加额外措施，直接close
 
+## 总结 xtls的原理
+
+请注意 ` typ == 23 && l >= 5` 和 `if c.vers == 772 {` 这两片代码，分别在 readRecordOrCCS 和 writeRecordLocked 各出现了一次
+
+https://halfrost.com/https_record_layer/
+
+>在 TLS 1.2 规范中，高层协议有 4 个，分别是 change_cipher_spec、alert、handshake、application_data。在 TLS 1.3 规范中高层协议也有 4 个，分别是 alert、handshake、application_data，heartbeat。
+
+https://datatracker.ietf.org/doc/html/rfc5246
+
+> change_cipher_spec(20), alert(21), handshake(22),application_data(23)
+
+也就是说，23 代表 application_data， 这个 tls1.2 和 1.3都是一样的
+
+根据
+https://halfrost.com/tls_1-3_record_protocol/
+
+tls1.2标准
+https://datatracker.ietf.org/doc/html/rfc5246
+
+tls1.0标准：
+https://datatracker.ietf.org/doc/html/rfc2246
+
+tls1.2和 1.3的 后面 两个数都是 3,3；而tls1.0的 后面两个数是 3，1； 也就是说，23 3 3 的判断是针对 tls1.2或者tls1.3的；
 
 
 
@@ -158,7 +191,14 @@ https://github.com/XTLS/Go/issues/16
 
 与xtls的issue16相关的 xray的 中文讨论issue https://github.com/XTLS/Xray-core/issues/814
 
+
+
+
 ### 无限循环攻击？
+
+
+
+#### 可以利用的代码部分
 
 关注conn.go代码 1107行 至 1144行
 
@@ -205,7 +245,7 @@ https://github.com/XTLS/Go/issues/16
 
 #### 小白们的误区
 
-有人评论说只要两端都开启tls1.3就可以防止问题？ 请问你怎么想的？ 23 3 3 攻击就是在攻击 tlsv1.3特征，能不能读题。
+有人评论说只要两端都开启tls1.3就可以防止问题？ 请问你怎么想的？甚至 23 3 3 攻击就是在攻击 tlsv1.3特征（Write 内部 tlsv1.3数据时），总之和开不开tls1.3没关系，能不能读题。
 
 TLS1.3 无法指定加密套件而已，而我们的 2333攻击 攻击的不是握手阶段，而是第一个数据阶段，还是审题啊！那个 “23” 我不是说了吗，是 recordTypeApplicationData，这就是数据的意思。
 
