@@ -203,6 +203,11 @@ https://github.com/RPRX/v2ray-vless/releases/tag/xtls2
 
 所谓的 DirectMode，应该是指，如果没有 DirectMode的话，每一个数据包都需要经过一堆判断，确认是不是 tls流量；而有了DirectMode之后，只需判断第一个数据包(这与 c.first又不同）。
 
+rprx自己也说了，和我的推理吻合
+https://github.com/RPRX/v2ray-vless/releases/tag/preview2.3
+
+>与 Origin 不同，Direct 模式并不持续监测后续的数据流，也不会进行任何干涉。该模式的推荐程度与 TLSv1.3 的普及程度成正相关。
+
 关于 c.first, 实际上是，因为 tls会分裂 一整段大数据为多个小数据，所以每次执行Read或Write时，都要判断一下 c.first，即数据包的第一个小片段。
 
 
