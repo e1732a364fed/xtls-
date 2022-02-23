@@ -190,7 +190,7 @@ tls1.2和 1.3的 后面 两个数都是 3,3；而tls1.0的 后面两个数是 3�
 
 c.RPRX 开关只在 writeRecordLocked 里真正使用到（一共用到7处，其他六处都是尝试判断并设它为false)。如果 c.RPRX 开关处于关闭状态，则 writeRecordLocked 直接进入normal标签，行为与标准包一样。
 
-
+总之，目前的 xtls的代码是，只有在 外部和内部都使用 tls1.3 时，才进行 direct模式，这就是我的理解。
 
 
 
