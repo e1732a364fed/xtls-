@@ -3,7 +3,7 @@
 
 ## xtls 到底什么原理？
 
-xtls从来没有人仔细解释过，唯一的解释来自rprx, 他还故意使用不同的协议，导致了分家事件；
+xtls从来没有人仔细解释过，唯一的解释来自rprx； 他还故意使用不同的开源协议（MPL，而不是GPL，大概就是说 MPL 支持用软件赚钱？目前我对MPL的理解），导致了分家事件；
 
 他对xtls原理的解释：
 https://github.com/RPRX/v2ray-vless/releases/tag/xtls
@@ -23,7 +23,7 @@ https://github.com/RPRX/v2ray-vless/releases/tag/xtls
 
  我对比一下吧，xtls的源码在 github.com/xtls/go
  
- 在xray的源码中，transport/internet/xtls/xtls.go 文件里，引用了 github.com/xtls/go 
+ 在 xtls 的源码中，transport/internet/xtls/xtls.go 文件里，引用了 github.com/xtls/go 
 
  
  xtls是使用了go的 crypto/tls 的源码 conn.go 作为蓝本
@@ -166,7 +166,7 @@ https://datatracker.ietf.org/doc/html/rfc5246
 
 也就是说，23 代表 application_data， 这个 tls1.2 和 1.3都是一样的
 
-根据rfc（注意这几个标准后两位都是46）
+根据rfc文件（注意这几个标准后两位都是46）
 
 tls1.3标准
 https://datatracker.ietf.org/doc/html/rfc8446 
