@@ -124,7 +124,7 @@ https://halfrost.com/https_record_layer/
 
 这个还可以参考 RFC标准： https://datatracker.ietf.org/doc/html/rfc8446  
 
-总之还是判断tls 1.3
+总之还是判断tls 1.3（根据后面阅读rfc文件，发现tls1.2也是 23 3 3 ）
 
 仔细分析，首先 默认 c.RPRX 标志是打开的，true，然后，在 `if !c.taken && !c.first && typ == 23 && l >= 5 {` 时，如果 xtls协议使用的是 tls1.3协议，则继续判断，否则则直接将 c.RPRX 标志关闭。继续判断的部分，可以理解为，如果 内部包里，有连续十个都不满足 一定条件，则会	 关闭 c.RPRX 开关。若10个以内有一个满足条件，则设 c.taken 为true。
 
@@ -347,6 +347,8 @@ https://github.com/XTLS/Xray-core/blob/e93da4bd02f2420df87d7b0b44412fbfbad7c295/
 ## xray 的 legacy
 
 不过它真的毫无价值了吗？应该也不是，因为除了这个以外，rprx还是实现了 ReadV 增强， splice，utls包 等应用。那些功能还是有价值的。
+
+不过后来查看发现 utls和xtls是平级的，也就是说 用utls就不能用xtls，用xtls就不能用utls。所以就剩 readv 和 splice了。
 
 ### ReadV
 
