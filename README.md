@@ -314,6 +314,11 @@ TLS1.3 只是握手更安全、更快了一些，而我们的 2333攻击 攻击�
 
 那个 “23” 我不是说了吗，是 recordTypeApplicationData，这就是数据的意思。
 
+我后来突然明白小白的误区了，根据 https://xtls.github.io/config/transport.html#tlsobject ， 你可以配置最低 tls版本为1.3
+
+问题是，这个配置的是外层的tls1.3，不是内层的啊！ 我们是无法控制内层传输的是tls1.3还是tls1.2的。而xtls除了本233问题之外的两个漏洞 都是和内层传输tls1.2 有关的。
+
+唉，听不明白算了。
 
 
 ## 关于 xray的流控
