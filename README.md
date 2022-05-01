@@ -387,7 +387,7 @@ https://github.com/v2fly/v2ray-core/blob/master/proxy/vless/inbound/inbound.go
 后来我研究splice时，才发现，rprx只是利用了一下 ReadV函数，实际上 和 readv函数时两回事。而v2ray里目前里面就有的readv实际上是 Victoria写的，早就存在的函数。
 
 我对readv的分析：
-https://github.com/hahahrfool/readv-
+https://github.com/e1732a364fed/readv-
 
 
 ### Splice
@@ -396,7 +396,7 @@ https://github.com/hahahrfool/readv-
 https://v2xtls.org/xray%e5%8f%91%e5%b8%831-1-2%e7%89%88%e6%9c%ac/
 
 我的新的关于splice的探讨，和本文关联较大，推荐扩展阅读。
-https://github.com/hahahrfool/xray_splice-
+https://github.com/e1732a364fed/xray_splice-
 
 
 # 话外
