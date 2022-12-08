@@ -62,7 +62,8 @@ maybe bool
 
 根据后面的分析，DirectIn 和 DirectOut 是 “判断完成，且该连接使用xtls 的 direct 流控” 的标志，在 Read 和 Write方法里会用到。
 
-3. 在 readRecordOrCCS 中发生了较大改变，具体是 `// Process message.`注释的下面
+3. 在 readRecordOrCCS 中发生了较大改变，具体是 `// Process message.`注释的下面.
+
 具体来说，他把 原先的下述代码
 
 ```go
